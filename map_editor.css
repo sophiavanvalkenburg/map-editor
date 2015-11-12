@@ -1,0 +1,42 @@
+#canvas-config {
+    margin-bottom:10px;
+}
+
+#canvas td {
+    border: 0px;
+}
+
+#canvas  td.show-gridlines {
+    border: 1px solid lightgrey; 
+}
+
+#canvas table {
+    border-collapse: collapse;
+}
+
+#palette {
+    display: none;
+    margin-top: 10px;
+}
+
+#palette .tools {
+    padding: 4px;
+    border: 1px solid #91765d;
+    background-color: #eee;
+    vertical-align: middle;
+}
+
+#palette .tools:hover {
+    border-color: #F0C49B
+}
+
+#palette .tools.activated {
+    border-color: red;
+    background-color: darkgrey;
+}
+
+#palette .tools img {
+    width: 20px;
+    height: 20px;
+    padding: 0px;
+}

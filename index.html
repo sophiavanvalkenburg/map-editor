@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Map Editor</title>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"/></script>
+    <script src="spectrum.js"></script>
+    <script src="map_editor.js"></script>
+    <link rel="stylesheet" type="text/css" href="map_editor.css"> 
+    <link rel="stylesheet" type="text/css" href="spectrum.css"> 
+  </head>
+  <body>
+    <div id="canvas-config">
+      <input id="tile-resolution" placeholder="Enter Tile Resolution"/>
+      <input id="canvas-num-cols" placeholder="Enter # Columns" />
+      <input id="canvas-num-rows" placeholder="Enter # Rows" />
+      <button id="generate-canvas-btn">Generate Canvas</button>
+    </div> 
+    <div id="canvas"></div>
+    <div id="palette">
+      <input type='text' class="picker"/>
+      <button id="eraser" class="tools tools-draw" ><img src="icons/icon-eraser.png"/></button>
+      <button id="dropper" class="tools tools-draw" ><img src="icons/icon-dropper.png"/></button>
+      <button id="gridlines" class="tools"><img src="icons/icon-grid.png"/></button>
+      <button id="save" class="tools"><img src="icons/icon-save.png"/></button>
+    </div>
+  </body>
+</html>
