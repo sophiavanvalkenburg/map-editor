@@ -1,13 +1,17 @@
 var MapEditor = function(){
   this.setup();
 }
+MapEditor.prototype.resetPalette = function (){
+  $(".tools").removeClass("activated");
+  $("#palette").show();
+}
 MapEditor.prototype.generateCanvas = function(){
   var resolution = Utils.convertToInt($("#tile-resolution").val());
   var num_columns = Utils.convertToInt($('#canvas-num-cols').val());
   var num_rows = Utils.convertToInt($('#canvas-num-rows').val());  
   this.canvas = new Canvas("canvas", resolution, num_columns, num_rows);
   this.canvas.draw();
-  $("#palette").show();
+  this.resetPalette();
   this.setupTileClickHandler();
 }
 MapEditor.prototype.setupTileClickHandler = function(){
