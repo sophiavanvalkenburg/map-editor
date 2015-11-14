@@ -2,6 +2,7 @@ var MapEditor = function(){
   this.setup();
   this.current_color = undefined;
   this.all_colors = {};
+  this.multi_placement_on = false;
 }
 MapEditor.prototype.resetToolset = function (){
   $(".tools").removeClass("activated");
@@ -32,6 +33,20 @@ MapEditor.prototype.setupTileClickHandler = function(){
         case Canvas.DROPPER:
           the_editor.getTileColor(tile);
           break;
+      }
+    });
+  $(".tile").mouseover(
+    function(){
+      if (the_editor.multi_placement_on){
+        var tile = the_editor.canvas.getTile($(this).data("x"), $(this).data("y"));
+        switch(the_editor.canvas.getMode()){
+          case Canvas.DRAW:
+            the_editor.setTileColor(tile);
+            break;
+          case Canvas.ERASER:
+            the_editor.eraseTileColor(tile);
+            break;
+        }
       }
     });
 }
@@ -84,6 +99,14 @@ MapEditor.prototype.setup = function(){
   $("#save").click(
     function(){
       the_editor.saveMap();
+    });
+   window.addEventListener("keyup",
+    function(e){
+      if (e.which === 32){
+        the_editor.multi_placement_on = !the_editor.multi_placement_on ;
+        var mp_status = the_editor.multi_placement_on ? "Multi-Placement is ON!" : "";
+        $("#multi-placement-status").text(mp_status);
+      }
     });
 }
 

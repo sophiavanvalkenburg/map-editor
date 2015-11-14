@@ -48,6 +48,10 @@
 
 #palette {
     margin-top:10px;
-    width: 300px;
+    max-width: 300px;
 }
 
+#multi-placement-status {
+    font-family: monospace;
+    color: red;
+}
