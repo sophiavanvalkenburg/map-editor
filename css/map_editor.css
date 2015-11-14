@@ -4,39 +4,50 @@
 
 #canvas td {
     border: 0px;
+    padding: 0px
 }
 
 #canvas  td.show-gridlines {
     border: 1px solid lightgrey; 
 }
 
+#canvas td img {
+    display: block;
+}
+
 #canvas table {
     border-collapse: collapse;
 }
 
-#palette {
+#toolset {
     display: none;
     margin-top: 10px;
 }
 
-#palette .tools {
+#toolset .tools, #palette {
     padding: 4px;
     border: 1px solid #91765d;
     background-color: #eee;
     vertical-align: middle;
 }
 
-#palette .tools:hover {
+#toolset .tools:hover {
     border-color: #F0C49B
 }
 
-#palette .tools.activated {
+#toolset .tools.activated {
     border-color: red;
     background-color: darkgrey;
 }
 
-#palette .tools img {
+#toolset .tools img {
     width: 20px;
     height: 20px;
     padding: 0px;
 }
+
+#palette {
+    margin-top:10px;
+    width: 300px;
+}
+

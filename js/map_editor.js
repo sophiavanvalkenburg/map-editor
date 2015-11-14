@@ -1,9 +1,11 @@
 var MapEditor = function(){
   this.setup();
+  this.current_color = undefined;
+  this.all_colors = {};
 }
-MapEditor.prototype.resetPalette = function (){
+MapEditor.prototype.resetToolset = function (){
   $(".tools").removeClass("activated");
-  $("#palette").show();
+  $("#toolset").show();
 }
 MapEditor.prototype.generateCanvas = function(){
   var resolution = Utils.convertToInt($("#tile-resolution").val());
@@ -11,8 +13,9 @@ MapEditor.prototype.generateCanvas = function(){
   var num_rows = Utils.convertToInt($('#canvas-num-rows').val());  
   this.canvas = new Canvas("canvas", resolution, num_columns, num_rows);
   this.canvas.draw();
-  this.resetPalette();
+  this.resetToolset();
   this.setupTileClickHandler();
+  this.toggleGridlines($("#gridlines"));
 }
 MapEditor.prototype.setupTileClickHandler = function(){
   var the_editor = this;
@@ -57,17 +60,15 @@ MapEditor.prototype.saveMap = function(){
   var encoded_uri = encodeURI(output);
   window.open(encoded_uri);
 }
-MapEditor.prototype.setupPalette = function(){
- $("#palette .picker").spectrum({
-    color: "#f00",
-    });
+MapEditor.prototype.setupToolset = function(){
   $("#eraser").data("mode", Canvas.ERASER);
   $("#dropper").data("mode", Canvas.DROPPER);
 }
 MapEditor.prototype.setup = function(){
   var canvas = undefined;
   var the_editor = this;
-  this.setupPalette();
+  this.setupToolset();
+  this.getPaletteImages();
   $('#generate-canvas-btn').click(
     function() {
       the_editor.generateCanvas();
@@ -87,8 +88,7 @@ MapEditor.prototype.setup = function(){
 }
 
 MapEditor.prototype.setTileColor = function(tile){
-  var current_color = $("#palette .picker").spectrum("get").toHexString();
-  tile.setColor(current_color);
+  tile.setColor(this.current_color);
   tile.draw();
 }
 
@@ -98,8 +98,42 @@ MapEditor.prototype.eraseTileColor = function(tile){
 }
 
 MapEditor.prototype.getTileColor = function(tile){
-  $("#palette .picker").spectrum("set", tile.color);
+  if (tile.color === undefined){
+    return;
+  }
+  var color = this.all_colors[tile.color];
+  this.setCurrentColor(color.$element);
   $("#dropper").click();
+}
+
+MapEditor.prototype.setCurrentColor = function($paint_btn){
+  $(".tools-paint").removeClass("activated");
+  $paint_btn.addClass("activated");
+  this.current_color = (new Color($paint_btn)).src;
+}
+
+MapEditor.prototype.getPaletteImages = function(){
+  var dir = "images/";
+  var ext = ".png";
+  var the_editor = this;
+  $.ajax({
+    url: dir,
+    success: function(data){
+      $(data).find("a:contains(" + ext + ")").each(
+        function(){
+          var filename = this.href.replace(window.location.host, "").replace("http://", "");
+          var src = filename.substr(1);
+          var $btn = $("<button class='tools tools-paint'><img src='" + src + "'></button>");
+          $("#palette").append($btn);
+          var color = new Color($btn);
+          the_editor.all_colors[color.src] = color;
+        });
+      $(".tools-paint").click(
+        function(){
+          the_editor.setCurrentColor($(this));
+        });
+    }
+  });
 }
 
 

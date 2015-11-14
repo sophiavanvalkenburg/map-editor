@@ -1,22 +1,33 @@
+var Color = function($element){
+  this.$element = $element;
+  this.src = $element.find("img").attr("src");
+}
+
 var Tile = function(x, y, resolution){
   this.x = x;
   this.y = y;
-  this.color = "#000000";
+  this.color = undefined;
   this.resolution = resolution;
   this.$element = undefined;
 };
 Tile.prototype.unsetColor = function(){
-  this.color = "#000000";
+  this.color = undefined;
 }
 Tile.prototype.setColor = function(color){
   this.color = color;
 };
 Tile.prototype.draw = function(){
+  this.$element.html("");
   this.$element.css("width", this.resolution);
   this.$element.css("height", this.resolution);
-  this.$element.css("background-color", this.color);
   this.$element.data("x", this.x);
   this.$element.data("y", this.y);
+  if (this.color !== undefined){
+    var $img = $("<img src='" + this.color + "'/>");
+    $img.css("width", this.resolution);
+    $img.css("height", this.resolution);
+    this.$element.append($img);
+  }
 }
 Tile.prototype.setElement = function($element){
   this.$element = $element;
