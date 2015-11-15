@@ -16,10 +16,10 @@ MapEditor.prototype.generateCanvas = function(resolution, num_cols, num_rows){
   this.canvas = new Canvas("canvas", resolution, num_cols, num_rows);
   this.canvas.draw();
   this.resetToolset();
-  this.setupTileClickHandler();
+  this.setupTileActionHandler();
   this.toggleGridlines($("#gridlines"));
 }
-MapEditor.prototype.setupTileClickHandler = function(){
+MapEditor.prototype.setupTileActionHandler = function(){
   var the_editor = this;
   $(".tile").click(
     function(){
