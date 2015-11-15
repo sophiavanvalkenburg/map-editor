@@ -9,30 +9,33 @@
     <link rel="stylesheet" type="text/css" href="css/map_editor.css"> 
   </head>
   <body>
-    <div id="canvas-config">
-      <input id="tile-resolution" placeholder="Enter Tile Resolution"/>
-      <input id="canvas-num-cols" placeholder="Enter # Columns" />
-      <input id="canvas-num-rows" placeholder="Enter # Rows" />
-      <button id="generate-canvas-btn">Generate Canvas</button>
-      <span>OR</span>
-      <button id="open">Open Map</button>
-      <input id="open-file-input" type="file"/>
-    </div> 
-    <div>
-      <label id="open-file-input-label" for="open-file-input"></label>
-    </div>
-    <div id="canvas"></div>
-    <div id="toolset">
-      <button id="eraser" class="tools tools-draw" ><img src="icons/icon-eraser.png"/></button>
-      <button id="dropper" class="tools tools-draw" ><img src="icons/icon-dropper.png"/></button>
-      <button id="gridlines" class="tools"><img src="icons/icon-grid.png"/></button>
-      <button id="save" class="tools"><img src="icons/icon-save.png"/></button>
-      <div>
-        <div id="palette">
-          <p></p>
-        </div>
+    <div id="map-editor" >
+      <h1>Map Editor</h1>
+      <div id="canvas-config">
+        <input id="tile-resolution" placeholder="Enter Tile Resolution"/>
+        <input id="canvas-num-cols" placeholder="Enter # Columns" />
+        <input id="canvas-num-rows" placeholder="Enter # Rows" />
+        <button id="generate-canvas-btn">Generate Canvas</button>
+        <span>OR</span>
+        <button id="open">Open Map</button>
+        <input id="open-file-input" type="file"/>
+      </div> 
+      <div >
+        <label id="open-file-input-label" for="open-file-input"></label>
       </div>
-      <p id="multi-placement-status"></p>
+      <div id="canvas" ></div>
+      <div id="toolset" >
+        <button id="eraser" class="tools tools-draw" ><img src="icons/icon-eraser.png"/></button>
+        <button id="dropper" class="tools tools-draw" ><img src="icons/icon-dropper.png"/></button>
+        <button id="gridlines" class="tools"><img src="icons/icon-grid.png"/></button>
+        <button id="save" class="tools"><img src="icons/icon-save.png"/></button>
+        <div>
+          <div id="palette">
+            <p></p>
+          </div>
+        </div>
+        <p id="multi-placement-status"></p>
+      </div>
     </div>
   </body>
 </html>
