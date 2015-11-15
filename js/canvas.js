@@ -41,11 +41,8 @@ var Canvas = function(id, resolution, num_columns, num_rows){
   this.num_rows = num_rows;
   this.tile_grid = [];
   this.generateTileGrid();
-  this.mode = Canvas.DRAW;
+  this.mode = MapEditor.DRAW;
 }
-Canvas.DRAW = "draw";
-Canvas.ERASER = "eraser";
-Canvas.DROPPER = "dropper"
 Canvas.prototype.getMode = function(){
   return this.mode;
 }

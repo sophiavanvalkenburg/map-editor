@@ -4,6 +4,9 @@ var MapEditor = function(){
   this.all_colors = {};
   this.multi_placement_on = false;
 }
+MapEditor.DRAW = "draw";
+MapEditor.ERASER = "eraser";
+MapEditor.DROPPER = "dropper"
 MapEditor.prototype.resetToolset = function (){
   $(".tools").removeClass("activated");
   $("#toolset").show();
@@ -24,13 +27,13 @@ MapEditor.prototype.setupTileClickHandler = function(){
     function(){
       var tile = the_editor.canvas.getTile($(this).data("x"), $(this).data("y"));
       switch(the_editor.canvas.getMode()){
-        case Canvas.DRAW:
+        case MapEditor.DRAW:
           the_editor.setTileColor(tile);
           break;
-        case Canvas.ERASER:
+        case MapEditor.ERASER:
           the_editor.eraseTileColor(tile);
           break;
-        case Canvas.DROPPER:
+        case MapEditor.DROPPER:
           the_editor.getTileColor(tile);
           break;
       }
@@ -40,10 +43,10 @@ MapEditor.prototype.setupTileClickHandler = function(){
       if (the_editor.multi_placement_on){
         var tile = the_editor.canvas.getTile($(this).data("x"), $(this).data("y"));
         switch(the_editor.canvas.getMode()){
-          case Canvas.DRAW:
+          case MapEditor.DRAW:
             the_editor.setTileColor(tile);
             break;
-          case Canvas.ERASER:
+          case MapEditor.ERASER:
             the_editor.eraseTileColor(tile);
             break;
         }
@@ -54,7 +57,7 @@ MapEditor.prototype.changeModes = function($clicked_tool){
   var canvas_mode = this.canvas.getMode();
   var clicked_mode = $clicked_tool.data("mode");
   if (canvas_mode === clicked_mode){
-    this.canvas.setMode(Canvas.DRAW);
+    this.canvas.setMode(MapEditor.DRAW);
     $clicked_tool.removeClass("activated");
   }else{
     $(".tools-draw").removeClass("activated");
@@ -76,8 +79,8 @@ MapEditor.prototype.saveMap = function(){
   window.open(encoded_uri);
 }
 MapEditor.prototype.setupToolset = function(){
-  $("#eraser").data("mode", Canvas.ERASER);
-  $("#dropper").data("mode", Canvas.DROPPER);
+  $("#eraser").data("mode", MapEditor.ERASER);
+  $("#dropper").data("mode", MapEditor.DROPPER);
 }
 MapEditor.prototype.setup = function(){
   var canvas = undefined;
