@@ -1,8 +1,9 @@
 var MapEditor = function(){
-  this.setup();
   this.current_color = undefined;
   this.all_colors = {};
   this.multi_placement_on = false;
+  this.file_reader = new FileReader();
+  this.setup();
 }
 MapEditor.DRAW = "draw";
 MapEditor.ERASER = "eraser";
@@ -11,15 +12,19 @@ MapEditor.prototype.resetToolset = function (){
   $(".tools").removeClass("activated");
   $("#toolset").show();
 }
-MapEditor.prototype.generateCanvas = function(){
-  var resolution = Utils.convertToInt($("#tile-resolution").val());
-  var num_columns = Utils.convertToInt($('#canvas-num-cols').val());
-  var num_rows = Utils.convertToInt($('#canvas-num-rows').val());  
-  this.canvas = new Canvas("canvas", resolution, num_columns, num_rows);
+MapEditor.prototype.generateCanvas = function(resolution, num_cols, num_rows){
+  this.canvas = new Canvas("canvas", resolution, num_cols, num_rows);
   this.canvas.draw();
   this.resetToolset();
   this.setupTileClickHandler();
   this.toggleGridlines($("#gridlines"));
+}
+MapEditor.prototype.setupFileReader = function(){
+  var the_editor = this;
+  this.file_reader.onloadend = function(e){
+    var file = e.target.result;
+    the_editor.openMap(file);
+  }
 }
 MapEditor.prototype.setupTileClickHandler = function(){
   var the_editor = this;
@@ -78,18 +83,63 @@ MapEditor.prototype.saveMap = function(){
   var encoded_uri = encodeURI(output);
   window.open(encoded_uri);
 }
+MapEditor.prototype.openMapParseTileRow = function(row){
+  if (row.length !== 3){
+    return;
+  }
+  var x = Utils.convertToInt(row[0]);
+  var y = Utils.convertToInt(row[1]);
+  var src = row[2];
+  var tile = this.canvas.getTile(x, y);
+  if (tile !== undefined){
+    tile.setColor(src);
+  }
+}
+MapEditor.prototype.openMapParseMetaDataRow = function(row){
+  if (row === undefined || row.length !== 3){
+    return;
+  }
+  var res = Utils.convertToInt(row[0]);
+  var cols = Utils.convertToInt(row[1]);
+  var rows = Utils.convertToInt(row[2]);
+  if (res === -1 || cols === -1 || rows === -1){
+    return;
+  }
+  return {resolution: res, num_columns: cols, num_rows: rows};
+}
+MapEditor.prototype.openMap = function(file){
+  var data = Utils.csvToArray(file);
+  var meta = this.openMapParseMetaDataRow(data[0]);
+  if (meta === undefined){
+    return;
+  }
+  this.generateCanvas(meta.resolution, meta.num_columns, meta.num_rows);
+  for (var i=1; i<data.length; i++){
+    this.openMapParseTileRow(data[i]);
+  }
+  this.canvas.draw();
+}
 MapEditor.prototype.setupToolset = function(){
   $("#eraser").data("mode", MapEditor.ERASER);
   $("#dropper").data("mode", MapEditor.DROPPER);
+}
+MapEditor.prototype.unsetOpenMapInput = function(){
+  $("#open-file-input").val("");
+  $("#open-file-input").change();
 }
 MapEditor.prototype.setup = function(){
   var canvas = undefined;
   var the_editor = this;
   this.setupToolset();
+  this.setupFileReader();
   this.getPaletteImages();
   $('#generate-canvas-btn').click(
     function() {
-      the_editor.generateCanvas();
+      the_editor.unsetOpenMapInput();
+      var resolution = Utils.convertToInt($("#tile-resolution").val());
+      var num_columns = Utils.convertToInt($('#canvas-num-cols').val());
+      var num_rows = Utils.convertToInt($('#canvas-num-rows').val());  
+      the_editor.generateCanvas(resolution, num_columns, num_rows);
     });
   $(".tools-draw").click(
     function(){
@@ -103,6 +153,21 @@ MapEditor.prototype.setup = function(){
     function(){
       the_editor.saveMap();
     });
+  $("#open").click(
+    function(){
+      $("#open-file-input").click();
+    });
+  $("#open-file-input").change(
+    function(){
+      var file = this.files[0];
+      if (file !== undefined){
+        $("#open-file-input-label").text(file.name);
+        the_editor.file_reader.readAsText(file);
+      }else{
+        $("#open-file-input-label").text("");
+      }
+    });
+  
    window.addEventListener("keyup",
     function(e){
       if (e.which === 32){
@@ -169,9 +234,19 @@ var Utils = {
       var new_int = parseInt(str);
       if (isNaN(new_int)){
         console.log("err: " + str + " is not a number");
-        return 0;
+        return -1;
       }
       return new_int;
+    },
+  csvToArray:
+    function(text){
+      var lines_array = [];
+      var lines = text.split("\n");
+      for (var i=0; i<lines.length; i++){
+        var rows = lines[i].split(",");
+        lines_array[i] = rows;
+      }
+      return lines_array;
     }
 }
 

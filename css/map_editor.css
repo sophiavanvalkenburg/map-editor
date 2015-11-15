@@ -51,7 +51,14 @@
     max-width: 300px;
 }
 
-#multi-placement-status {
+.text-container {
     font-family: monospace;
+}
+
+#multi-placement-status {
     color: red;
+}
+
+#open-file-input {
+    display: none;
 }
