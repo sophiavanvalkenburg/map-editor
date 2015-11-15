@@ -59,14 +59,17 @@ MapEditor.prototype.setupTileActionHandler = function(){
     });
 }
 MapEditor.prototype.changeModes = function($clicked_tool){
-  var canvas_mode = this.canvas.getMode();
   var clicked_mode = $clicked_tool.data("mode");
-  if (canvas_mode === clicked_mode){
-    this.canvas.setMode(MapEditor.DRAW);
+  if ($clicked_tool.hasClass("activated")){
     $clicked_tool.removeClass("activated");
+    this.canvas.setMode(MapEditor.NONE);
+    this.unsetCurrentColor();
   }else{
     $(".tools-draw").removeClass("activated");
     $clicked_tool.addClass("activated");
+    if ($clicked_tool.hasClass("tools-paint")){
+      this.setCurrentColor($clicked_tool);
+    }
     this.canvas.setMode(clicked_mode);
   }
 }
@@ -158,8 +161,11 @@ MapEditor.prototype.getTileColor = function(tile){
     return;
   }
   var color = this.all_colors[tile.color];
-  this.setCurrentColor(color.$element);
-  $("#dropper").click();
+  color.$element.click();
+}
+
+MapEditor.prototype.unsetCurrentColor = function(){
+  this.current_color = undefined;
 }
 
 MapEditor.prototype.setCurrentColor = function($paint_btn){
@@ -179,14 +185,15 @@ MapEditor.prototype.getPaletteImages = function(){
         function(){
           var filename = this.href.replace(window.location.host, "").replace("http://", "");
           var src = filename.substr(1);
-          var $btn = $("<button class='tools tools-paint'><img src='" + src + "'></button>");
+          var $btn = $("<button class='tools tools-draw tools-paint'><img src='" + src + "'></button>");
           $("#palette").append($btn);
           var color = new Color($btn);
           the_editor.all_colors[color.src] = color;
         });
+      $(".tools-paint").data("mode", MapEditor.DRAW);
       $(".tools-paint").click(
         function(){
-          the_editor.setCurrentColor($(this));
+          the_editor.changeModes($(this));
         });
     }
   });
