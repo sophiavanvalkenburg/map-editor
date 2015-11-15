@@ -181,27 +181,42 @@ MapEditor.prototype.setCurrentColor = function($paint_btn){
   this.current_color = (new Color($paint_btn)).src;
 }
 
+MapEditor.prototype.addImageToPalette = function(img){
+  var filename = img.href.replace(window.location.host, "").replace("http://", "");
+  var $btn = this.createPaletteImageButton(filename.substr(1));
+  $("#palette").append($btn);
+  var color = new Color($btn);
+  this.all_colors[color.src] = color;
+}
+MapEditor.prototype.createPaletteImageButton = function(src){
+  var $image_btn = $("<button class='tools tools-draw tools-paint'><img src='" + src + "'></button>");
+  $image_btn.data("mode", MapEditor.DRAW);
+  var the_editor = this;
+  $image_btn.click(
+    function(){
+      the_editor.changeModes($(this))
+    });
+  return $image_btn
+}
 MapEditor.prototype.getPaletteImages = function(){
   var dir = "images/";
   var ext = ".png";
+  var palette_error_msg = "Unable to load palette images";
   var the_editor = this;
   $.ajax({
     url: dir,
+    error: function(){
+      $("#palette p").html(palette_error_msg).show();
+    },
     success: function(data){
-      $(data).find("a:contains(" + ext + ")").each(
-        function(){
-          var filename = this.href.replace(window.location.host, "").replace("http://", "");
-          var src = filename.substr(1);
-          var $btn = $("<button class='tools tools-draw tools-paint'><img src='" + src + "'></button>");
-          $("#palette").append($btn);
-          var color = new Color($btn);
-          the_editor.all_colors[color.src] = color;
-        });
-      $(".tools-paint").data("mode", MapEditor.DRAW);
-      $(".tools-paint").click(
-        function(){
-          the_editor.changeModes($(this));
-        });
+      var images = $(data).find("a:contains(" + ext + ")")
+      if (images.length === 0){
+        $("#palette p").html(palette_error_msg).show();
+      }else{
+        for (var i=0; i<images.length; i++){
+          the_editor.addImageToPalette(images[i]);
+        }
+      }
     }
   });
 }

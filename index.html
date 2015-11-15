@@ -14,12 +14,12 @@
       <input id="canvas-num-cols" placeholder="Enter # Columns" />
       <input id="canvas-num-rows" placeholder="Enter # Rows" />
       <button id="generate-canvas-btn">Generate Canvas</button>
-      <span class="text-container">OR</span>
+      <span>OR</span>
       <button id="open">Open Map</button>
       <input id="open-file-input" type="file"/>
     </div> 
     <div>
-      <label id="open-file-input-label" class="text-container" for="open-file-input"></label>
+      <label id="open-file-input-label" for="open-file-input"></label>
     </div>
     <div id="canvas"></div>
     <div id="toolset">
@@ -28,9 +28,11 @@
       <button id="gridlines" class="tools"><img src="icons/icon-grid.png"/></button>
       <button id="save" class="tools"><img src="icons/icon-save.png"/></button>
       <div>
-        <div id="palette"></div>
+        <div id="palette">
+          <p></p>
+        </div>
       </div>
-      <p id="multi-placement-status" class="text-container" ></p>
+      <p id="multi-placement-status"></p>
     </div>
   </body>
 </html>
