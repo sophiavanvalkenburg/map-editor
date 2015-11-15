@@ -10,6 +10,20 @@ MapLoader.prototype.setupFileReader = function(){
     the_loader.parseMapDataAndGenerateMap(file);
   }
 }
+MapLoader.prototype.getMapDataOutput = function(){
+  var output = "data:text/csv;charset=utf-8,";
+  var meta = this.editor.getCanvasMetaData();
+  output += meta.resolution + "," + meta.num_columns + "," + meta.num_rows+"\n";
+  for (var r=0; r<meta.num_rows; r++){
+    for (var c=0; c<meta.num_columns; c++){
+      var tile = this.editor.getCanvasTile(c, r);
+      if (tile.color !== undefined){
+        output += tile.x+","+tile.y+","+tile.color+"\n";
+      }
+    }
+  }
+  return output;
+}
 MapLoader.prototype.parseTileRow = function(row){
   if (row.length !== 3){
     return;

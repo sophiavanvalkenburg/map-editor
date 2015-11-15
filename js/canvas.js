@@ -83,15 +83,4 @@ Canvas.prototype.draw = function(){
   }
   $("#"+this.id).append($table);
 }
-Canvas.prototype.tileGridOutput = function(){
-  var output = "data:text/csv;charset=utf-8,";
-  for (var r=0; r<this.num_rows; r++){
-    for (var c=0; c<this.num_columns; c++){
-      var tile = this.getTile(c, r);
-      output += tile.x+","+tile.y+","+tile.color+"\n";
-    }
-  }
-  return output;
-}
-
 

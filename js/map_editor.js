@@ -26,6 +26,13 @@ MapEditor.prototype.drawCanvas = function(){
 MapEditor.prototype.getCanvasTile = function(x, y){
   return this.canvas.getTile(x, y);
 }
+MapEditor.prototype.getCanvasMetaData = function(){
+  return {
+    resolution: this.canvas.resolution,
+    num_columns: this.canvas.num_columns,
+    num_rows: this.canvas.num_rows
+  };
+}
 MapEditor.prototype.setupTileActionHandler = function(){
   var the_editor = this;
   $(".tile").click(
@@ -82,7 +89,7 @@ MapEditor.prototype.toggleGridlines = function($clicked_tool){
   }
 }
 MapEditor.prototype.saveMap = function(){
-  var output = this.canvas.tileGridOutput();
+  var output = this.map_loader.getMapDataOutput();
   var encoded_uri = encodeURI(output);
   window.open(encoded_uri);
 }
