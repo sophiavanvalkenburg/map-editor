@@ -8,22 +8,29 @@ var MapEditor = function(){
 MapEditor.DRAW = "draw";
 MapEditor.ERASER = "eraser";
 MapEditor.DROPPER = "dropper"
+MapEditor.NONE = "none";
 MapEditor.prototype.resetToolset = function (){
   $(".tools").removeClass("activated");
   $("#toolset").show();
 }
 MapEditor.prototype.generateCanvas = function(resolution, num_cols, num_rows){
   this.canvas = new Canvas("canvas", resolution, num_cols, num_rows);
+  this.drawCanvas();
+}
+MapEditor.prototype.drawCanvas = function(){
   this.canvas.draw();
-  this.resetToolset();
   this.setupTileActionHandler();
+  this.resetToolset();
   this.toggleGridlines($("#gridlines"));
+}
+MapEditor.prototype.getCanvasTile = function(x, y){
+  return this.canvas.getTile(x, y);
 }
 MapEditor.prototype.setupTileActionHandler = function(){
   var the_editor = this;
   $(".tile").click(
     function(){
-      var tile = the_editor.canvas.getTile($(this).data("x"), $(this).data("y"));
+      var tile = the_editor.getCanvasTile($(this).data("x"), $(this).data("y"));
       switch(the_editor.canvas.getMode()){
         case MapEditor.DRAW:
           the_editor.setTileColor(tile);
@@ -39,7 +46,7 @@ MapEditor.prototype.setupTileActionHandler = function(){
   $(".tile").mouseover(
     function(){
       if (the_editor.multi_placement_on){
-        var tile = the_editor.canvas.getTile($(this).data("x"), $(this).data("y"));
+        var tile = the_editor.getCanvasTile($(this).data("x"), $(this).data("y"));
         switch(the_editor.canvas.getMode()){
           case MapEditor.DRAW:
             the_editor.setTileColor(tile);

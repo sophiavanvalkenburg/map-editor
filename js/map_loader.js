@@ -17,7 +17,7 @@ MapLoader.prototype.parseTileRow = function(row){
   var x = Utils.convertToInt(row[0]);
   var y = Utils.convertToInt(row[1]);
   var src = row[2];
-  var tile = this.editor.canvas.getTile(x, y);
+  var tile = this.editor.getCanvasTile(x, y);
   if (tile !== undefined){
     tile.setColor(src);
   }
@@ -47,6 +47,6 @@ MapLoader.prototype.parseMapDataAndGenerateMap = function(file){
   for (var i=1; i<data.length; i++){
     this.parseTileRow(data[i]);
   }
-  this.editor.canvas.draw();
+  this.editor.drawCanvas();
 }
 
