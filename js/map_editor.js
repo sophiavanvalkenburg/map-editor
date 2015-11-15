@@ -2,7 +2,7 @@ var MapEditor = function(){
   this.current_color = undefined;
   this.all_colors = {};
   this.multi_placement_on = false;
-  this.file_reader = new FileReader();
+  this.map_loader = new MapLoader(this);
   this.setup();
 }
 MapEditor.DRAW = "draw";
@@ -18,13 +18,6 @@ MapEditor.prototype.generateCanvas = function(resolution, num_cols, num_rows){
   this.resetToolset();
   this.setupTileClickHandler();
   this.toggleGridlines($("#gridlines"));
-}
-MapEditor.prototype.setupFileReader = function(){
-  var the_editor = this;
-  this.file_reader.onloadend = function(e){
-    var file = e.target.result;
-    the_editor.openMap(file);
-  }
 }
 MapEditor.prototype.setupTileClickHandler = function(){
   var the_editor = this;
@@ -83,41 +76,14 @@ MapEditor.prototype.saveMap = function(){
   var encoded_uri = encodeURI(output);
   window.open(encoded_uri);
 }
-MapEditor.prototype.openMapParseTileRow = function(row){
-  if (row.length !== 3){
-    return;
+MapEditor.prototype.openMap = function(file_input){
+  var file = file_input.files[0];
+  if (file !== undefined){
+    $("#open-file-input-label").text(file.name);
+    this.map_loader.loadMapData(file);
+  }else{
+    $("#open-file-input-label").text("");
   }
-  var x = Utils.convertToInt(row[0]);
-  var y = Utils.convertToInt(row[1]);
-  var src = row[2];
-  var tile = this.canvas.getTile(x, y);
-  if (tile !== undefined){
-    tile.setColor(src);
-  }
-}
-MapEditor.prototype.openMapParseMetaDataRow = function(row){
-  if (row === undefined || row.length !== 3){
-    return;
-  }
-  var res = Utils.convertToInt(row[0]);
-  var cols = Utils.convertToInt(row[1]);
-  var rows = Utils.convertToInt(row[2]);
-  if (res === -1 || cols === -1 || rows === -1){
-    return;
-  }
-  return {resolution: res, num_columns: cols, num_rows: rows};
-}
-MapEditor.prototype.openMap = function(file){
-  var data = Utils.csvToArray(file);
-  var meta = this.openMapParseMetaDataRow(data[0]);
-  if (meta === undefined){
-    return;
-  }
-  this.generateCanvas(meta.resolution, meta.num_columns, meta.num_rows);
-  for (var i=1; i<data.length; i++){
-    this.openMapParseTileRow(data[i]);
-  }
-  this.canvas.draw();
 }
 MapEditor.prototype.setupToolset = function(){
   $("#eraser").data("mode", MapEditor.ERASER);
@@ -131,7 +97,6 @@ MapEditor.prototype.setup = function(){
   var canvas = undefined;
   var the_editor = this;
   this.setupToolset();
-  this.setupFileReader();
   this.getPaletteImages();
   $('#generate-canvas-btn').click(
     function() {
@@ -159,15 +124,8 @@ MapEditor.prototype.setup = function(){
     });
   $("#open-file-input").change(
     function(){
-      var file = this.files[0];
-      if (file !== undefined){
-        $("#open-file-input-label").text(file.name);
-        the_editor.file_reader.readAsText(file);
-      }else{
-        $("#open-file-input-label").text("");
-      }
+      the_editor.openMap(this);
     });
-  
    window.addEventListener("keyup",
     function(e){
       if (e.which === 32){
