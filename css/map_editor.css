@@ -49,6 +49,7 @@
 #palette {
     margin-top:10px;
     max-width: 300px;
+    display: inline-block;
 }
 
 .text-container {
