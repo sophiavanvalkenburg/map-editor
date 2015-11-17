@@ -90,11 +90,18 @@ MapEditor.prototype.changeModes = function($clicked_tool){
 }
 
 MapEditor.prototype.unsetInfoMode = function(){
+
   $("#tile-info-box").hide();
   $("#canvas td").removeClass("highlighted");
-  $(".tile-info-text").text("");
-  $(".tile-info-input").val("");
   this.selected_tile = undefined;
+  $("#tile-info-map").val("");
+  $("#tile-info-x").val("");
+  $("#tile-info-y").val("");
+  $("#tile-info-portal-map").val("");
+  $("#tile-info-portal-x").val("");
+  $("#tile-info-portal-y").val("");
+  $("#tile-info-graphic").text("");
+  $("#tile-info-accessible").prop("checked", false);
 }
 
 MapEditor.prototype.toggleGridlines = function($clicked_tool){
@@ -202,9 +209,9 @@ MapEditor.prototype.openInfoMode = function(tile){
 }
 
 MapEditor.prototype.populateTileInfoBox = function(tile){
-  $("#tile-info-map").text(tile.map);
-  $("#tile-info-x").text(tile.x);
-  $("#tile-info-y").text(tile.y);
+  $("#tile-info-map").val(tile.map);
+  $("#tile-info-x").val(tile.x);
+  $("#tile-info-y").val(tile.y);
   $("#tile-info-portal-map").val(tile.portal_map);
   $("#tile-info-portal-x").val(tile.portal_x);
   $("#tile-info-portal-y").val(tile.portal_y);

@@ -25,28 +25,40 @@
       </div>
       <div id="tile-info-box">
         <div id="tile-info-container">
-          <table id="tile-info-table">
-            <tr>
-              <td class="header">Accessible:</td>
-              <td colspan="3"><input id="tile-info-accessible" type="checkbox" value="is_accessible" ></td>
-            </tr>
-            <tr>
-              <td class="header">Portal:</td>
-              <td>map <input id="tile-info-portal-map" class="tile-info-input "/></td>
-              <td>x <input id="tile-info-portal-x" class="tile-info-input "/></td>
-              <td>y <input id="tile-info-portal-y" class="tile-info-input "/></td>
-            </tr>
-            <tr>
-              <td class="header">Location:</td>
-              <td><span>map </span><span id="tile-info-map" class="tile-info-text"></span></td>
-              <td><span>x </span><span id="tile-info-x" class="tile-info-text"></span></td>
-              <td><span>y </span><span id="tile-info-y" class="tile-info-text"></span></td>
-            </tr>
-            <tr>
-              <td class="header" >Graphic:</td>
-              <td colspan="3"><div id="tile-info-graphic" class="tile-info-text"></div></td>
-            </tr>
-          </table>
+          <form id="tile-info-form">
+            <div>
+          	  <label for="tile-info-accessible">Accessible:</label>
+              <span class="tile-info-field"/>
+          	    <input id="tile-info-accessible" type="checkbox" value="is_accessible" >
+              </span>
+            </div>
+            <div>
+              <label for="tile-info-portal">Portal:</label>
+              <span id="tile-info-portal" class="tile-info-field">
+                <label for="tile-info-portal-map">map</label>
+                <input id="tile-info-portal-map" />
+                <label for="tile-info-portal-x">x</label>
+                <input id="tile-info-portal-x" />
+                <label for="tile-info-portal-y">y</label>
+                <input id="tile-info-portal-y" />
+              </span>
+            </div>
+            <div>
+          	  <label for="tile-info-loc">Location:</label>
+          	  <span id="tile-info-loc" class="tile-info-field">
+          	    <label for="tile-info-map">map</label>
+          	    <input id="tile-info-map"  disabled/>
+                <label for="tile-info-x">x</label>
+                <input id="tile-info-x"  disabled/>
+                <label for="tile-info-y">y</label>
+                <input id="tile-info-y"  disabled />
+          	  </span>
+            </div>
+            <div>
+          	  <label for="tile-info-graphic">Graphic:</label>
+          	  <span id="tile-info-graphic" class="tile-info-field"></span>
+            </div>
+          </form>
           <button id="save-info-box">Save</button>
           <span id="saved-info-indicator">Saved!</span>
         </div>

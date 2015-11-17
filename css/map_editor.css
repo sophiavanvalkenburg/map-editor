@@ -96,11 +96,23 @@ h1 {
     display: none;
 }
 
-#tile-info-box table td.header {
+#tile-info-form label {
     font-weight: bold;
 }
 
-#tile-info-box .tile-info-input {
-    width: 20px;
+#tile-info-form div {
+   margin-bottom: 5px;
 }
 
+#tile-info-form input {
+    width: 20px;
+    border: 1px solid black;
+}
+
+#tile-info-form input:disabled{
+    border: 1px solid lightgrey;
+}
+
+#tile-info-form .tile-info-field {
+    float: right;
+}
