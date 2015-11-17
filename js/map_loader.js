@@ -10,19 +10,40 @@ MapLoader.prototype.setupFileReader = function(){
     the_loader.parseMapDataAndGenerateMap(file);
   }
 }
+MapLoader.prototype.getTileDataOutput = function(tile){
+  var loc = { x: tile.x, y: tile.y, map: tile.map};
+  var portal = {};
+  if (tile.portal_x !== "" &&
+      tile.portal_y !== "" &&
+      tile.portal_map !== "" ){
+      portal.x = tile.portal_x;
+      portal.y = tile.portal_y;
+      portal.map = tile.portal_map;
+  } 
+  return {
+    loc:            loc,
+    portal:         portal,
+    is_accessible:  tile.is_accessible,
+    graphic:        tile.color
+  };
+}
 MapLoader.prototype.getMapDataOutput = function(){
-  var output = "data:text/csv;charset=utf-8,";
   var meta = this.editor.getCanvasMetaData();
-  output += meta.resolution + "," + meta.num_columns + "," + meta.num_rows+"\n";
+  output = { meta:{}, tiles:[]};
+  output.meta.resolution = meta.resolution;
+  output.meta.num_columns = meta.num_columns;
+  output.meta.num_rows = meta.num_rows;
   for (var r=0; r<meta.num_rows; r++){
     for (var c=0; c<meta.num_columns; c++){
       var tile = this.editor.getCanvasTile(c, r);
       if (tile.color !== undefined){
-        output += tile.x+","+tile.y+","+tile.color+"\n";
+        output.tiles.push( this.getTileDataOutput(tile) );   
       }
     }
   }
-  return output;
+  console.log(output);
+  var output_str = "data:application/json;charset=utf-8," + JSON.stringify(output);
+  return output_str;
 }
 MapLoader.prototype.parseTileRow = function(row){
   if (row.length !== 3){

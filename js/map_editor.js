@@ -1,4 +1,3 @@
-
 var MapEditor = function(){
   this.current_color = undefined;
   this.selected_tile = undefined;
@@ -226,7 +225,7 @@ MapEditor.prototype.saveTileInfo = function(){
   this.selected_tile.portal_map = $("#tile-info-portal-map").val();
   this.selected_tile.portal_x = $("#tile-info-portal-x").val();
   this.selected_tile.portal_y = $("#tile-info-portal-y").val();
-  this.selected_tile.is_accessible = $("#tile-info-accessible").is("checked");
+  this.selected_tile.is_accessible = $("#tile-info-accessible").prop("checked");
   $("#saved-info-indicator").show();
   window.setTimeout( function(){ $("#saved-info-indicator").hide();}, 1000);
 }
