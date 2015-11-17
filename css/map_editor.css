@@ -23,6 +23,10 @@ h1 {
     border: 1px solid lightgrey; 
 }
 
+#canvas td.highlighted {
+    border: 3px solid red;
+}
+
 #canvas td img {
     display: block;
 }
@@ -76,3 +80,27 @@ h1 {
 #open-file-input {
     display: none;
 }
+
+#tile-info-box {
+    display: none;
+    width: 260px;
+    border: 2px solid black;
+    margin-bottom: 10px;
+}
+
+#tile-info-container {
+    padding: 5px;
+}
+
+#saved-info-indicator {
+    display: none;
+}
+
+#tile-info-box table td.header {
+    font-weight: bold;
+}
+
+#tile-info-box .tile-info-input {
+    width: 20px;
+}
+

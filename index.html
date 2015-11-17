@@ -23,12 +23,41 @@
       <div >
         <label id="open-file-input-label" for="open-file-input"></label>
       </div>
+      <div id="tile-info-box">
+        <div id="tile-info-container">
+          <table id="tile-info-table">
+            <tr>
+              <td class="header">Accessible:</td>
+              <td colspan="3"><input id="tile-info-accessible" type="checkbox" value="is_accessible" ></td>
+            </tr>
+            <tr>
+              <td class="header">Portal:</td>
+              <td>map <input id="tile-info-portal-map" class="tile-info-input "/></td>
+              <td>x <input id="tile-info-portal-x" class="tile-info-input "/></td>
+              <td>y <input id="tile-info-portal-y" class="tile-info-input "/></td>
+            </tr>
+            <tr>
+              <td class="header">Location:</td>
+              <td><span>map </span><span id="tile-info-map" class="tile-info-text"></span></td>
+              <td><span>x </span><span id="tile-info-x" class="tile-info-text"></span></td>
+              <td><span>y </span><span id="tile-info-y" class="tile-info-text"></span></td>
+            </tr>
+            <tr>
+              <td class="header" >Graphic:</td>
+              <td colspan="3"><div id="tile-info-graphic" class="tile-info-text"></div></td>
+            </tr>
+          </table>
+          <button id="save-info-box">Save</button>
+          <span id="saved-info-indicator">Saved!</span>
+        </div>
+      </div>
       <div id="canvas" ></div>
       <div id="toolset" >
         <button id="eraser" class="tools tools-draw" ><img src="icons/icon-eraser.png"/></button>
         <button id="dropper" class="tools tools-draw" ><img src="icons/icon-dropper.png"/></button>
         <button id="gridlines" class="tools"><img src="icons/icon-grid.png"/></button>
         <button id="save" class="tools"><img src="icons/icon-save.png"/></button>
+        <button id="info" class="tools tools-draw"><img src="icons/icon-info.png"/></button>
         <div>
           <div id="palette">
             <p></p>

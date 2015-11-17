@@ -1,5 +1,7 @@
+
 var MapEditor = function(){
   this.current_color = undefined;
+  this.selected_tile = undefined;
   this.all_colors = {};
   this.multi_placement_on = false;
   this.map_loader = new MapLoader(this);
@@ -7,7 +9,8 @@ var MapEditor = function(){
 }
 MapEditor.DRAW = "draw";
 MapEditor.ERASER = "eraser";
-MapEditor.DROPPER = "dropper"
+MapEditor.DROPPER = "dropper";
+MapEditor.INFO = "info";
 MapEditor.NONE = "none";
 MapEditor.prototype.resetToolset = function (){
   $(".tools").removeClass("activated");
@@ -48,6 +51,9 @@ MapEditor.prototype.setupTileActionHandler = function(){
         case MapEditor.DROPPER:
           the_editor.getTileColor(tile);
           break;
+        case MapEditor.INFO:
+          the_editor.openInfoMode(tile);
+          break;
       }
     });
   $(".tile").mouseover(
@@ -71,7 +77,9 @@ MapEditor.prototype.changeModes = function($clicked_tool){
     $clicked_tool.removeClass("activated");
     this.canvas.setMode(MapEditor.NONE);
     this.unsetCurrentColor();
+    this.unsetInfoMode();
   }else{
+    this.unsetInfoMode();
     $(".tools-draw").removeClass("activated");
     $clicked_tool.addClass("activated");
     if ($clicked_tool.hasClass("tools-paint")){
@@ -80,6 +88,15 @@ MapEditor.prototype.changeModes = function($clicked_tool){
     this.canvas.setMode(clicked_mode);
   }
 }
+
+MapEditor.prototype.unsetInfoMode = function(){
+  $("#tile-info-box").hide();
+  $("#canvas td").removeClass("highlighted");
+  $(".tile-info-text").text("");
+  $(".tile-info-input").val("");
+  this.selected_tile = undefined;
+}
+
 MapEditor.prototype.toggleGridlines = function($clicked_tool){
   $clicked_tool.toggleClass("activated");
   if ($clicked_tool.hasClass("activated")){
@@ -105,6 +122,7 @@ MapEditor.prototype.openMap = function(file_input){
 MapEditor.prototype.setupToolset = function(){
   $("#eraser").data("mode", MapEditor.ERASER);
   $("#dropper").data("mode", MapEditor.DROPPER);
+  $("#info").data("mode", MapEditor.INFO);
 }
 MapEditor.prototype.unsetOpenMapInput = function(){
   $("#open-file-input").val("");
@@ -143,6 +161,10 @@ MapEditor.prototype.setup = function(){
     function(){
       the_editor.openMap(this);
     });
+  $("#save-info-box").click(
+      function(){
+        the_editor.saveTileInfo();
+      });
    window.addEventListener("keyup",
     function(e){
       if (e.which === 32){
@@ -169,6 +191,37 @@ MapEditor.prototype.getTileColor = function(tile){
   }
   var color = this.all_colors[tile.color];
   color.$element.click();
+}
+
+MapEditor.prototype.openInfoMode = function(tile){
+  this.selected_tile = tile;
+  $("#tile-info-box").show();
+  this.populateTileInfoBox(tile);
+  $("#canvas td").removeClass("highlighted");
+  tile.$element.addClass("highlighted");
+}
+
+MapEditor.prototype.populateTileInfoBox = function(tile){
+  $("#tile-info-map").text(tile.map);
+  $("#tile-info-x").text(tile.x);
+  $("#tile-info-y").text(tile.y);
+  $("#tile-info-portal-map").val(tile.portal_map);
+  $("#tile-info-portal-x").val(tile.portal_x);
+  $("#tile-info-portal-y").val(tile.portal_y);
+  $("#tile-info-graphic").text(tile.color);
+  $("#tile-info-accessible").prop("checked", tile.is_accessible);
+}
+
+MapEditor.prototype.saveTileInfo = function(){
+  if (this.selected_tile === undefined){
+    return;
+  }
+  this.selected_tile.portal_map = $("#tile-info-portal-map").val();
+  this.selected_tile.portal_x = $("#tile-info-portal-x").val();
+  this.selected_tile.portal_y = $("#tile-info-portal-y").val();
+  this.selected_tile.is_accessible = $("#tile-info-accessible").is("checked");
+  $("#saved-info-indicator").show();
+  window.setTimeout( function(){ $("#saved-info-indicator").hide();}, 1000);
 }
 
 MapEditor.prototype.unsetCurrentColor = function(){

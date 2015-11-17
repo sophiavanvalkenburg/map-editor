@@ -4,9 +4,14 @@ var Color = function($element){
 }
 
 var Tile = function(x, y, resolution){
+  this.map = "";
   this.x = x;
   this.y = y;
+  this.portal_map = "";
+  this.portal_x = "";
+  this.portal_y = "";
   this.color = undefined;
+  this.is_accessible = true;
   this.resolution = resolution;
   this.$element = undefined;
 };
