@@ -34,6 +34,7 @@ MapLoader.prototype.getMapDataOutput = function(){
   output.meta.resolution = meta.resolution;
   output.meta.num_columns = meta.num_columns;
   output.meta.num_rows = meta.num_rows;
+  output.meta.map_id = meta.map_id;
   for (var r=0; r<meta.num_rows; r++){
     for (var c=0; c<meta.num_columns; c++){
       var tile = this.editor.getCanvasTile(c, r);
@@ -42,7 +43,6 @@ MapLoader.prototype.getMapDataOutput = function(){
       }
     }
   }
-  console.log(output);
   var output_str = "data:application/json;charset=utf-8," + JSON.stringify(output);
   return output_str;
 }
@@ -71,10 +71,11 @@ MapLoader.prototype.parseMetaData = function(data){
   var res = Utils.convertToInt(data.meta.resolution);
   var cols = Utils.convertToInt(data.meta.num_columns);
   var rows = Utils.convertToInt(data.meta.num_rows);
-  if (res === -1 || cols === -1 || rows === -1){
+  var map = Utils.convertToInt(data.meta.map_id);
+  if (res === -1 || cols === -1 || rows === -1 || map === -1){
     return;
   }
-  return {resolution: res, num_columns: cols, num_rows: rows};
+  return {resolution: res, num_columns: cols, num_rows: rows, map_id: map};
 }
 MapLoader.prototype.loadMapData = function(file){
   this.file_reader.readAsText(file);
@@ -85,7 +86,7 @@ MapLoader.prototype.parseMapDataAndGenerateMap = function(file){
   if (meta === undefined){
     return;
   }
-  this.editor.generateCanvas(meta.resolution, meta.num_columns, meta.num_rows);
+  this.editor.generateCanvas(meta.resolution, meta.num_columns, meta.num_rows, meta.map_id);
   for (var i=0; i<data.tiles.length; i++){
     this.parseTileData(data.tiles[i]);
   }

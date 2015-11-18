@@ -32,7 +32,8 @@ MapEditor.prototype.getCanvasMetaData = function(){
   return {
     resolution: this.canvas.resolution,
     num_columns: this.canvas.num_columns,
-    num_rows: this.canvas.num_rows
+    num_rows: this.canvas.num_rows,
+    map_id: this.canvas.map_id
   };
 }
 MapEditor.prototype.setupTileActionHandler = function(){
