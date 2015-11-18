@@ -13,12 +13,15 @@ MapLoader.prototype.setupFileReader = function(){
 MapLoader.prototype.getTileDataOutput = function(tile){
   var loc = { x: tile.x, y: tile.y, map: tile.map};
   var portal = {};
-  if (tile.portal_x !== "" &&
-      tile.portal_y !== "" &&
-      tile.portal_map !== "" ){
-      portal.x = tile.portal_x;
-      portal.y = tile.portal_y;
-      portal.map = tile.portal_map;
+  var portal_x = Utils.convertToInt(tile.portal_x);
+  var portal_y = Utils.convertToInt(tile.portal_y);
+  var portal_map = Utils.convertToInt(tile.portal_map);
+  if (portal_x !== -1 &&
+      portal_y !==  -1 &&
+      portal_map !== -1 ){
+    portal.x = portal_x;
+    portal.y = portal_y;
+    portal.map = portal_map
   } 
   return {
     loc:            loc,
