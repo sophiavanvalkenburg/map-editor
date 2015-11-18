@@ -45,25 +45,30 @@ MapLoader.prototype.getMapDataOutput = function(){
   var output_str = "data:application/json;charset=utf-8," + JSON.stringify(output);
   return output_str;
 }
-MapLoader.prototype.parseTileRow = function(row){
-  if (row.length !== 3){
-    return;
-  }
-  var x = Utils.convertToInt(row[0]);
-  var y = Utils.convertToInt(row[1]);
-  var src = row[2];
+MapLoader.prototype.parseTileData = function(tile_data){
+  var x = Utils.convertToInt(tile_data.loc.x);
+  var y = Utils.convertToInt(tile_data.loc.y);
   var tile = this.editor.getCanvasTile(x, y);
   if (tile !== undefined){
-    tile.setColor(src);
+    tile.setColor(tile_data.graphic);
+    tile.is_accessible = tile_data.is_accessible;
+    var map = Utils.convertToInt(tile_data.loc.map);
+    var portal_map = Utils.convertToInt(tile_data.portal.map);
+    var portal_x = Utils.convertToInt(tile_data.portal.x);
+    var portal_y = Utils.convertToInt(tile_data.portal.y);
+    tile.map = map === -1 ? "" : map;
+    tile.portal_map = portal_map === -1 ? "" : portal_map;
+    tile.portal_x = portal_x === -1 ? "" : portal_x;
+    tile.portal_y = portal_y === -1 ? "" : portal_y;
   }
 }
-MapLoader.prototype.parseMetaDataRow = function(row){
-  if (row === undefined || row.length !== 3){
+MapLoader.prototype.parseMetaData = function(data){
+  if (data === undefined || data.meta === undefined){
     return;
   }
-  var res = Utils.convertToInt(row[0]);
-  var cols = Utils.convertToInt(row[1]);
-  var rows = Utils.convertToInt(row[2]);
+  var res = Utils.convertToInt(data.meta.resolution);
+  var cols = Utils.convertToInt(data.meta.num_columns);
+  var rows = Utils.convertToInt(data.meta.num_rows);
   if (res === -1 || cols === -1 || rows === -1){
     return;
   }
@@ -73,14 +78,14 @@ MapLoader.prototype.loadMapData = function(file){
   this.file_reader.readAsText(file);
 }
 MapLoader.prototype.parseMapDataAndGenerateMap = function(file){
-  var data = Utils.csvToArray(file);
-  var meta = this.parseMetaDataRow(data[0]);
+  var data = JSON.parse(file);
+  var meta = this.parseMetaData(data);
   if (meta === undefined){
     return;
   }
   this.editor.generateCanvas(meta.resolution, meta.num_columns, meta.num_rows);
-  for (var i=1; i<data.length; i++){
-    this.parseTileRow(data[i]);
+  for (var i=0; i<data.tiles.length; i++){
+    this.parseTileData(data.tiles[i]);
   }
   this.editor.drawCanvas();
 }

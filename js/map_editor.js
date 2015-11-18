@@ -290,16 +290,6 @@ var Utils = {
         return -1;
       }
       return new_int;
-    },
-  csvToArray:
-    function(text){
-      var lines_array = [];
-      var lines = text.split("\n");
-      for (var i=0; i<lines.length; i++){
-        var rows = lines[i].split(",");
-        lines_array[i] = rows;
-      }
-      return lines_array;
     }
 }
 
