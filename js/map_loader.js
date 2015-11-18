@@ -24,7 +24,8 @@ MapLoader.prototype.getTileDataOutput = function(tile){
     loc:            loc,
     portal:         portal,
     is_accessible:  tile.is_accessible,
-    graphic:        tile.color
+    graphic:        tile.color,
+    messages:       tile.messages
   };
 }
 MapLoader.prototype.getMapDataOutput = function(){
@@ -52,6 +53,7 @@ MapLoader.prototype.parseTileData = function(tile_data){
   if (tile !== undefined){
     tile.setColor(tile_data.graphic);
     tile.is_accessible = tile_data.is_accessible;
+    tile.messages = tile_data.messages;
     var map = Utils.convertToInt(tile_data.loc.map);
     var portal_map = Utils.convertToInt(tile_data.portal.map);
     var portal_x = Utils.convertToInt(tile_data.portal.x);
