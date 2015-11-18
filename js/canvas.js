@@ -3,8 +3,8 @@ var Color = function($element){
   this.src = $element.find("img").attr("src");
 }
 
-var Tile = function(x, y, resolution){
-  this.map = "";
+var Tile = function(x, y, resolution, map_id){
+  this.map = map_id;
   this.x = x;
   this.y = y;
   this.portal_map = "";
@@ -39,13 +39,13 @@ Tile.prototype.setElement = function($element){
 }
 
 
-var Canvas = function(id, resolution, num_columns, num_rows){
+var Canvas = function(id, map_id, resolution, num_columns, num_rows){
   this.id = id;
   this.resolution = resolution;
   this.num_columns = num_columns;
   this.num_rows = num_rows;
   this.tile_grid = [];
-  this.generateTileGrid();
+  this.generateTileGrid(map_id);
   this.mode = MapEditor.NONE;
 }
 Canvas.prototype.getMode = function(){
@@ -59,11 +59,11 @@ Canvas.prototype.getTile = function(x, y){
     return this.tile_grid[y][x];
   }
 }
-Canvas.prototype.generateTileGrid = function(){
+Canvas.prototype.generateTileGrid = function(map_id){
  for (var r=0; r<this.num_rows; r++){
     this.tile_grid[r] = [];
     for (var c=0; c<this.num_columns; c++){
-      var tile = new Tile(c, r, this.resolution);
+      var tile = new Tile(c, r, this.resolution, map_id);
       this.tile_grid[r].push(tile);
     }
   }

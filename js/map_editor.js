@@ -15,8 +15,8 @@ MapEditor.prototype.resetToolset = function (){
   $(".tools").removeClass("activated");
   $("#toolset").show();
 }
-MapEditor.prototype.generateCanvas = function(resolution, num_cols, num_rows){
-  this.canvas = new Canvas("canvas", resolution, num_cols, num_rows);
+MapEditor.prototype.generateCanvas = function(resolution, num_cols, num_rows, map_id){
+  this.canvas = new Canvas("canvas", map_id, resolution, num_cols, num_rows);
   this.drawCanvas();
 }
 MapEditor.prototype.drawCanvas = function(){
@@ -145,7 +145,8 @@ MapEditor.prototype.setup = function(){
       var resolution = Utils.convertToInt($("#tile-resolution").val());
       var num_columns = Utils.convertToInt($('#canvas-num-cols').val());
       var num_rows = Utils.convertToInt($('#canvas-num-rows').val());  
-      the_editor.generateCanvas(resolution, num_columns, num_rows);
+      var map_id = Utils.convertToInt($("#map-id").val());
+      the_editor.generateCanvas(resolution, num_columns, num_rows, map_id);
     });
   $(".tools-draw").click(
     function(){
