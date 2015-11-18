@@ -104,8 +104,16 @@ h1 {
    margin-bottom: 5px;
 }
 
-#tile-info-form input {
+#tile-info-form #tile-info-portal input, #tile-info-form #tile-info-loc input {
     width: 20px;
+}
+
+#tile-info-form .tile-info-message {
+    width: 100%;
+    margin-bottom: 2px;
+} 
+
+#tile-info-form input {
     border: 1px solid black;
 }
 

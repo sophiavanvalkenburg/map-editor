@@ -12,6 +12,7 @@ var Tile = function(x, y, resolution, map_id){
   this.portal_y = "";
   this.color = undefined;
   this.is_accessible = true;
+  this.messages = [];
   this.resolution = resolution;
   this.$element = undefined;
 };

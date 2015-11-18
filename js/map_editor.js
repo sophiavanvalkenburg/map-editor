@@ -89,7 +89,6 @@ MapEditor.prototype.changeModes = function($clicked_tool){
 }
 
 MapEditor.prototype.unsetInfoMode = function(){
-
   $("#tile-info-box").hide();
   $("#canvas td").removeClass("highlighted");
   this.selected_tile = undefined;
@@ -101,6 +100,7 @@ MapEditor.prototype.unsetInfoMode = function(){
   $("#tile-info-portal-y").val("");
   $("#tile-info-graphic").text("");
   $("#tile-info-accessible").prop("checked", false);
+  this.clearMessageBoxes();
 }
 
 MapEditor.prototype.toggleGridlines = function($clicked_tool){
@@ -133,6 +133,16 @@ MapEditor.prototype.setupToolset = function(){
 MapEditor.prototype.unsetOpenMapInput = function(){
   $("#open-file-input").val("");
   $("#open-file-input").change();
+}
+
+MapEditor.prototype.addMessageBox = function(){
+  var $message_box = $("<input>").addClass("tile-info-message");
+  $("#tile-info-message-container").append($message_box);
+  return $message_box;
+}
+MapEditor.prototype.clearMessageBoxes = function(){
+  $("#tile-info-message-container").html("");
+  this.addMessageBox();
 }
 MapEditor.prototype.setup = function(){
   var canvas = undefined;
@@ -171,6 +181,11 @@ MapEditor.prototype.setup = function(){
   $("#save-info-box").click(
       function(){
         the_editor.saveTileInfo();
+      });
+  $("#add-msg-btn").click(
+      function(){
+        the_editor.addMessageBox();
+        return false;
       });
    window.addEventListener("keyup",
     function(e){
@@ -217,6 +232,21 @@ MapEditor.prototype.populateTileInfoBox = function(tile){
   $("#tile-info-portal-y").val(tile.portal_y);
   $("#tile-info-graphic").text(tile.color);
   $("#tile-info-accessible").prop("checked", tile.is_accessible);
+  this.populateMessageBoxes(tile.messages); 
+}
+
+MapEditor.prototype.populateMessageBoxes = function(messages){
+  this.clearMessageBoxes();
+  var $message_boxes = $(".tile-info-message");
+  for (var i=0; i<messages.length; i++){
+    var $box = undefined;
+    if (i >= $message_boxes.length){
+      $box = this.addMessageBox();
+    }else{
+      $box = $($message_boxes[i]);
+    }
+    $box.val(messages[i]);
+  }
 }
 
 MapEditor.prototype.saveTileInfo = function(){
@@ -227,8 +257,20 @@ MapEditor.prototype.saveTileInfo = function(){
   this.selected_tile.portal_x = $("#tile-info-portal-x").val();
   this.selected_tile.portal_y = $("#tile-info-portal-y").val();
   this.selected_tile.is_accessible = $("#tile-info-accessible").prop("checked");
+  this.selected_tile.messages = this.getMessageBoxesText();
   $("#saved-info-indicator").show();
   window.setTimeout( function(){ $("#saved-info-indicator").hide();}, 1000);
+}
+MapEditor.prototype.getMessageBoxesText = function(){
+  var $message_boxes = $(".tile-info-message");
+  var messages = [];
+  for (var i=0; i<$message_boxes.length; i++){
+    var text = $($message_boxes[i]).val();
+    if (text.trim() !== ""){
+      messages.push(text);
+    } 
+  }
+  return messages;
 }
 
 MapEditor.prototype.unsetCurrentColor = function(){
