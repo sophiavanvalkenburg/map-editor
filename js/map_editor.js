@@ -21,8 +21,8 @@ MapEditor.prototype.generateCanvas = function(resolution, num_cols, num_rows, ma
   this.setupCanvas();
 }
 MapEditor.prototype.setupCanvas = function(){
-  this.drawCanvas();
   this.resetToolset();
+  this.drawCanvas();
 }
 MapEditor.prototype.drawCanvas = function(){
   this.canvas.draw();
@@ -77,7 +77,7 @@ MapEditor.prototype.setupTileActionHandler = function(){
             the_editor.eraseTileColor(tile);
             break;
           case MapEditor.ACCESSIBILITY:
-            the_editor.setTileAccessibility(tile, true);
+            the_editor.setTileAccessibility(tile, false);
             break;
           default:
             break;
@@ -208,14 +208,27 @@ MapEditor.prototype.setup = function(){
         the_editor.addMessageBox();
         return false;
       });
-   window.addEventListener("keyup",
+   window.addEventListener("keydown",
     function(e){
       if (e.which === 32){
-        the_editor.multi_placement_on = !the_editor.multi_placement_on ;
-        var mp_status = the_editor.multi_placement_on ? "Multi-Placement is ON!" : "";
-        $("#multi-placement-status").text(mp_status);
+        the_editor.setMultiPlacementOn(true);
       }
     });
+  window.addEventListener("keyup",
+    function(e){
+      if (e.which === 32){
+        the_editor.setMultiPlacementOn(false);
+      }
+    });
+}
+
+MapEditor.prototype.setMultiPlacementOn = function(is_on){
+  if (this.multi_placement_on === is_on){
+    return;
+  }
+  this.multi_placement_on = is_on ;
+  var mp_status = this.multi_placement_on ? "Multi-Placement is ON!" : "";
+  $("#multi-placement-status").text(mp_status);
 }
 
 MapEditor.prototype.setTileColor = function(tile){
