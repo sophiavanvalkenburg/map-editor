@@ -11,20 +11,24 @@ MapEditor.ERASER = "eraser";
 MapEditor.DROPPER = "dropper";
 MapEditor.INFO = "info";
 MapEditor.NONE = "none";
+MapEditor.ACCESSIBILITY = "accessibility";
 MapEditor.prototype.resetToolset = function (){
   $(".tools").removeClass("activated");
   $("#toolset").show();
 }
 MapEditor.prototype.generateCanvas = function(resolution, num_cols, num_rows, map_id){
   this.canvas = new Canvas("canvas", map_id, resolution, num_cols, num_rows);
+  this.setupCanvas();
+}
+MapEditor.prototype.setupCanvas = function(){
   this.drawCanvas();
+  this.resetToolset();
 }
 MapEditor.prototype.drawCanvas = function(){
   this.canvas.draw();
   this.setupTileActionHandler();
-  this.resetToolset();
-  this.toggleGridlines($("#gridlines"));
-}
+  this.addGridlines($("#gridlines"));
+};
 MapEditor.prototype.getCanvasTile = function(x, y){
   return this.canvas.getTile(x, y);
 }
@@ -51,8 +55,13 @@ MapEditor.prototype.setupTileActionHandler = function(){
         case MapEditor.DROPPER:
           the_editor.getTileColor(tile);
           break;
+        case MapEditor.ACCESSIBILITY:
+          the_editor.setTileAccessibility(tile);
+          break;
         case MapEditor.INFO:
           the_editor.openInfoMode(tile);
+          break;
+        default:
           break;
       }
     });
@@ -66,6 +75,11 @@ MapEditor.prototype.setupTileActionHandler = function(){
             break;
           case MapEditor.ERASER:
             the_editor.eraseTileColor(tile);
+            break;
+          case MapEditor.ACCESSIBILITY:
+            the_editor.setTileAccessibility(tile, true);
+            break;
+          default:
             break;
         }
       }
@@ -87,6 +101,7 @@ MapEditor.prototype.changeModes = function($clicked_tool){
     }
     this.canvas.setMode(clicked_mode);
   }
+  this.drawCanvas();
 }
 
 MapEditor.prototype.unsetInfoMode = function(){
@@ -112,6 +127,10 @@ MapEditor.prototype.toggleGridlines = function($clicked_tool){
     $("#canvas td").removeClass("show-gridlines");
   }
 }
+MapEditor.prototype.addGridlines = function($tool){
+  $tool.addClass("activated");
+  $("#canvas td").addClass("show-gridlines");
+}
 MapEditor.prototype.saveMap = function(){
   var output = this.map_loader.getMapDataOutput();
   var encoded_uri = encodeURI(output);
@@ -130,6 +149,7 @@ MapEditor.prototype.setupToolset = function(){
   $("#eraser").data("mode", MapEditor.ERASER);
   $("#dropper").data("mode", MapEditor.DROPPER);
   $("#info").data("mode", MapEditor.INFO);
+  $("#accessibility").data("mode", MapEditor.ACCESSIBILITY);
 }
 MapEditor.prototype.unsetOpenMapInput = function(){
   $("#open-file-input").val("");
@@ -200,12 +220,21 @@ MapEditor.prototype.setup = function(){
 
 MapEditor.prototype.setTileColor = function(tile){
   tile.setColor(this.current_color);
-  tile.draw();
+  this.canvas.drawTile(tile);
+}
+
+MapEditor.prototype.setTileAccessibility = function(tile, value){
+  if (value === undefined){
+    tile.is_accessible = !tile.is_accessible;
+  }else{
+    tile.is_accessible = value;
+  }
+  this.canvas.drawTile(tile);
 }
 
 MapEditor.prototype.eraseTileColor = function(tile){
   tile.unsetColor();
-  tile.draw();
+  this.canvas.drawTile(tile);
 }
 
 MapEditor.prototype.getTileColor = function(tile){

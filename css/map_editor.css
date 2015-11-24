@@ -124,3 +124,17 @@ h1 {
 #tile-info-form .tile-info-field {
     float: right;
 }
+
+.tile-content {
+    position: relative;
+}
+
+.inaccessible-icon {
+    position: absolute;
+    z-index: 2;
+}
+
+.tile-img {
+    position: relative;
+    z-index: 1;
+}
