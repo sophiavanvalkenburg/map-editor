@@ -199,14 +199,14 @@ MapEditor.prototype.setup = function(){
     function(){
       the_editor.openMap(this);
     });
-  $("#save-info-box").click(
-      function(){
-        the_editor.saveTileInfo();
-      });
   $("#add-msg-btn").click(
       function(){
         the_editor.addMessageBox();
         return false;
+      });
+  $("#tile-info-form").change(
+      function(){
+        the_editor.saveTileInfo();
       });
    window.addEventListener("keydown",
     function(e){
