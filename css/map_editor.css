@@ -108,12 +108,12 @@ h1 {
     width: 20px;
 }
 
-#tile-info-form .tile-info-message {
-    width: 100%;
-    margin-bottom: 2px;
+#tile-info-form #tile-info-messages {
+    width: 97%;
+    height: 50px;
 } 
 
-#tile-info-form input {
+#tile-info-form input, #tile-info-messages {
     border: 1px solid black;
 }
 
