@@ -116,6 +116,7 @@ MapEditor.prototype.unsetInfoMode = function(){
   $("#tile-info-portal-y").val("");
   $("#tile-info-graphic").text("");
   $("#tile-info-accessible").prop("checked", false);
+  $("#tile-info-label").val("");
   this.clearMessageBoxes();
 }
 
@@ -275,6 +276,7 @@ MapEditor.prototype.populateTileInfoBox = function(tile){
   $("#tile-info-portal-y").val(tile.portal_y);
   $("#tile-info-graphic").text(tile.color);
   $("#tile-info-accessible").prop("checked", tile.is_accessible);
+  $("#tile-info-label").val(tile.label);
   this.populateMessageBoxes(tile.messages); 
 }
 
@@ -300,6 +302,7 @@ MapEditor.prototype.saveTileInfo = function(){
   this.selected_tile.portal_x = $("#tile-info-portal-x").val();
   this.selected_tile.portal_y = $("#tile-info-portal-y").val();
   this.selected_tile.is_accessible = $("#tile-info-accessible").prop("checked");
+  this.selected_tile.label = this.getLabelText(); 
   this.selected_tile.messages = this.getMessageBoxesText();
   $("#saved-info-indicator").show();
   window.setTimeout( function(){ $("#saved-info-indicator").hide();}, 1000);
@@ -310,12 +313,14 @@ MapEditor.prototype.getMessageBoxesText = function(){
   for (var i=0; i<$message_boxes.length; i++){
     var text = $($message_boxes[i]).val();
     if (text.trim() !== ""){
-      messages.push(text);
+      messages.push(text.trim());
     } 
   }
   return messages;
 }
-
+MapEditor.prototype.getLabelText = function(){
+  return $("#tile-info-label").val().trim();
+}
 MapEditor.prototype.unsetCurrentColor = function(){
   this.current_color = undefined;
 }
